@@ -5,7 +5,7 @@ from fpdf import FPDF
 
 # Gemini API key initialization
 GEMINI_API_KEY = "your-gemini-api-key-here"  # Replace with your actual Gemini API key
-genai.configure(api_key=AIzaSyD4JbmGIIsB02nfJWODw8OgBL9rcJenjcw)
+genai.configure(api_key="AIzaSyD4JbmGIIsB02nfJWODw8OgBL9rcJenjcw")
 
 # Initialize Gemini model
 model = genai.GenerativeModel("gemini-2.0-flash")
