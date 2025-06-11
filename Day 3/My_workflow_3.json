@@ -1,0 +1,221 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            },
+            {}
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -360,
+        -40
+      ],
+      "id": "3161b77a-4a7b-4926-ad15-71fd7eca3022",
+      "name": "Gmail Trigger1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yjR7gKrO6hIqgqkx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a smart HR assistant. Read the email below and extract:\n\n- Employee Email  \n- Leave Type (Casual/Sick/Other)  \n- Start Date  \n- End Date  \n\nEmail:",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -140,
+        -40
+      ],
+      "id": "37060e7b-d7b0-40df-9f77-aa6832612a77",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        120
+      ],
+      "id": "88aaed5d-bdc6-4068-a1a4-adfa94dfd6d5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QbfKgC0hIv45kMjA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1qC7s-Zk5VunLdfXTTEfL7T2a5DiFj-ZVcBfYopgrd2w",
+          "mode": "list",
+          "cachedResultName": "n82",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qC7s-Zk5VunLdfXTTEfL7T2a5DiFj-ZVcBfYopgrd2w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qC7s-Zk5VunLdfXTTEfL7T2a5DiFj-ZVcBfYopgrd2w/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        180,
+        -40
+      ],
+      "id": "8581c467-a7e3-496b-91ca-4e3346a9b99a",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxmQnCKMtTgsYEby",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst updatedItems = items.map((item) => {\n  const leaveType = item.json.leaveType + \" Leave\"; // e.g., \"Casual Leave\"\n  const availableBalance = parseInt(item.json[leaveType]);\n  const requestedDays = parseInt(item.json.requestedDays); // You can calculate this earlier using dates\n\n  let status = \"Rejected\";\n  if (requestedDays <= availableBalance) {\n    status = \"Approved\";\n  }\n\n  return {\n    json: {\n      ...item.json,\n      availableBalance,\n      status,\n    },\n  };\n});\n\nreturn updatedItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        -40
+      ],
+      "id": "08437c12-35df-4ba3-a1da-730c910d983b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "da9.iqac@snagroups .com",
+        "subject": "Hello",
+        "message": "- Employee Email   - Leave Type (Casual/Sick/Other)   - Start Date   - End Date  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        120,
+        220
+      ],
+      "id": "6fd39dd7-7b9f-437e-b6ba-57f536aac5b3",
+      "name": "Gmail",
+      "webhookId": "cec2d598-c79a-488f-9c1a-b9bde6274609",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yjR7gKrO6hIqgqkx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "77a72ee1-9972-441b-b3e5-5320955a22b0",
+        "authentication": "basicAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        320,
+        220
+      ],
+      "id": "59cf3016-d27f-47a8-956f-34c1959583d0",
+      "name": "Webhook",
+      "webhookId": "77a72ee1-9972-441b-b3e5-5320955a22b0"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "891e0763-e583-4d36-9eeb-1638d65d0bc2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5780c32e145ca1a5d30db5abf61e19dabfa5c7e8d1686edc55c9ce6024f4c0fe"
+  },
+  "id": "wZjFqSTlX07Q0rDJ",
+  "tags": []
+}

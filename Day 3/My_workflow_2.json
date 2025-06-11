@@ -1,0 +1,102 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                5
+              ],
+              "triggerAtHour": 17
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -280,
+        -60
+      ],
+      "id": "17db579e-c8ec-4f68-b856-ddc117376138",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "da8.iqac@snsgroups.com",
+        "subject": "Weekly Report - IIPC File",
+        "emailType": "text",
+        "message": "Hi Sir,\n\nI have attached the Weekly Report - IIPC file for your review.\n\nKindly review and let me know if any changes are required.\n\nFile Link: Weekly Report\n\n\nThanks and Regards, \nDevika.S\nData Analyst - IQAC",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        160,
+        -60
+      ],
+      "id": "b11eaf96-77c9-4aed-a3a4-61db5b2108b0",
+      "name": "Gmail",
+      "webhookId": "57b8bb8c-9f69-4868-9363-861dd7883195",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yjR7gKrO6hIqgqkx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        -60
+      ],
+      "id": "a689162b-5a13-41f2-ac80-cf2d5add6d6f",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a8679d9d-97c6-4934-84f9-da488db94c77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5780c32e145ca1a5d30db5abf61e19dabfa5c7e8d1686edc55c9ce6024f4c0fe"
+  },
+  "id": "Y5c5XvNh1ykfb0Js",
+  "tags": []
+}

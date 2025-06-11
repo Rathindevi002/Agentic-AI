@@ -1,0 +1,170 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -40
+      ],
+      "id": "c683b44a-ef83-4835-9831-3babf8bc534a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "16_HRB1ZcU9EDwlmXLwCiyG_E_HWMN-AD2OkgW8brSU0",
+          "mode": "list",
+          "cachedResultName": "N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16_HRB1ZcU9EDwlmXLwCiyG_E_HWMN-AD2OkgW8brSU0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16_HRB1ZcU9EDwlmXLwCiyG_E_HWMN-AD2OkgW8brSU0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -120,
+        -40
+      ],
+      "id": "dec6dfd2-f182-4a3e-9f4d-ec9121eee9a6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AxmQnCKMtTgsYEby",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json['Gmail - ID'] }}",
+        "subject": "Work Flow",
+        "message": "={{ $('Google Sheets').item.json['Meeting Notes'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        -40
+      ],
+      "id": "10a209f8-4922-4f48-9658-41a41446c698",
+      "name": "Gmail",
+      "webhookId": "69451734-267d-4889-9a2b-370dd7fb4266",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yjR7gKrO6hIqgqkx",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You will receive meeting notes as input.\n\nEach line follows this format:\nName: Action - Task description\n\nYour job is to:\n1. Extract each task\n2. Group them by the person's name (the agent)\n\nReturn the result in this format:\n- Agent: Name\n  - Task\n\nExample input:\nJohn: Action - Update website banner  \nMeena: Action - Prepare budget proposal\n\nNow process this:\n{{ $json[\"Meeting Notes\"] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        120,
+        -40
+      ],
+      "id": "03a4072f-627a-41f7-ba81-9a68850e6397",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        140,
+        180
+      ],
+      "id": "0413417c-6c84-40a3-a4ea-1ba9c9f55df8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QbfKgC0hIv45kMjA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "672a943e-f365-4d0b-8548-89362b4cd006",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5780c32e145ca1a5d30db5abf61e19dabfa5c7e8d1686edc55c9ce6024f4c0fe"
+  },
+  "id": "oCezPIlTJ2Pyzz4Z",
+  "tags": []
+}
