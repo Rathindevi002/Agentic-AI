@@ -4,39 +4,47 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
 from langchain_core.messages import AIMessage
 
-# ---- Hardcoded Gemini API key ----
+# ✅ HARDCODED GEMINI API KEY (for demo purposes)
 GEMINI_API_KEY = "AIzaSyD4JbmGIIsB02nfJWODw8OgBL9rcJenjcw"
 
-# ---- Initialize LLM using LangChain ----
+# ✅ Initialize Gemini LLM
 try:
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=GEMINI_API_KEY)
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        google_api_key=GEMINI_API_KEY
+    )
 except Exception as e:
     st.error(f"❌ Failed to initialize Gemini: {e}")
     st.stop()
 
-# ---- Prompt Template ----
+# ✅ Prompt Template
 prompt = ChatPromptTemplate.from_messages([
     ("system", "You are a helpful assistant that translates English to French."),
     ("human", "Translate the following sentence to French:\n\n{english_sentence}")
 ])
 
-# ---- Chain ----
+# ✅ Combine prompt and model into a chain
 translation_chain: Runnable = prompt | llm
 
-# ---- Streamlit UI ----
+# ✅ Streamlit UI
 st.set_page_config(page_title="English to French Translator", page_icon="🌍")
 st.title("🌍 English to French Translator")
 st.markdown("Enter an English sentence and click *Translate* to get the French version.")
 
+# ✅ Input box
 english_input = st.text_input("Enter English Sentence:", placeholder="e.g., How are you?")
 
+# ✅ Translate button
 if st.button("Translate"):
     if not english_input.strip():
         st.warning("⚠️ Please enter a sentence before clicking Translate.")
     else:
         try:
+            # Run the translation chain
             response = translation_chain.invoke({"english_sentence": english_input})
             french_output = response.content if isinstance(response, AIMessage) else str(response)
+
+            # Show result
             st.success("✅ Translation successful!")
             st.text_area("French Translation:", value=french_output, height=150)
         except Exception as e:
