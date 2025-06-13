@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
 from langchain_core.messages import AIMessage
 
-# ✅ HARDCODED GEMINI API KEY (for demo purposes)
+# ✅ Hardcoded Gemini API Key
 GEMINI_API_KEY = "AIzaSyD4JbmGIIsB02nfJWODw8OgBL9rcJenjcw"
 
 # ✅ Initialize Gemini LLM
@@ -23,7 +23,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("human", "Translate the following sentence to French:\n\n{english_sentence}")
 ])
 
-# ✅ Combine prompt and model into a chain
+# ✅ Translation Chain
 translation_chain: Runnable = prompt | llm
 
 # ✅ Streamlit UI
@@ -31,20 +31,17 @@ st.set_page_config(page_title="English to French Translator", page_icon="🌍")
 st.title("🌍 English to French Translator")
 st.markdown("Enter an English sentence and click *Translate* to get the French version.")
 
-# ✅ Input box
+# ✅ User Input
 english_input = st.text_input("Enter English Sentence:", placeholder="e.g., How are you?")
 
-# ✅ Translate button
+# ✅ Handle Translation
 if st.button("Translate"):
     if not english_input.strip():
         st.warning("⚠️ Please enter a sentence before clicking Translate.")
     else:
         try:
-            # Run the translation chain
             response = translation_chain.invoke({"english_sentence": english_input})
             french_output = response.content if isinstance(response, AIMessage) else str(response)
-
-            # Show result
             st.success("✅ Translation successful!")
             st.text_area("French Translation:", value=french_output, height=150)
         except Exception as e:
