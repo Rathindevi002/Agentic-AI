@@ -1,0 +1,471 @@
+{
+  "name": "Survey Feedback Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ff4a7539-f99c-4b6b-b278-164b91e0acd2",
+              "name": "Feedback",
+              "value": "={{ $json.Feedback }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1760,
+        -520
+      ],
+      "id": "8bd732c2-6934-4ff2-b0cf-57dfd3f49f0c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "sendTo": "devikasundaram.123@gmail.com",
+        "subject": "Feedback Survay",
+        "emailType": "text",
+        "message": "=Feedback: {{ $('Google Sheets').item.json.candidates[0].content.parts[0].text }}\n\nThanks and Regards, \nDevika.S\nData Analyst - IQAC",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        -520
+      ],
+      "id": "1f03d386-1305-4b36-b1f5-57d8f0a23773",
+      "name": "Gmail",
+      "webhookId": "a5b591d1-357b-46f0-ba67-ba44ee197e91",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tx15pUrWVRYxSDjB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyD4JbmGIIsB02nfJWODw8OgBL9rcJenjcw",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Summarize this feedback and suggest action or department: {{ $json.Feedback }}\"\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1480,
+        -520
+      ],
+      "id": "c614837a-a33b-48cd-acc9-09620f7fc208",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1lpF3EEXnD-HUieM6NTWODR5I1t_qngYpSKtCHoHLD9c",
+          "mode": "list",
+          "cachedResultName": "Feedback survey",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lpF3EEXnD-HUieM6NTWODR5I1t_qngYpSKtCHoHLD9c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lpF3EEXnD-HUieM6NTWODR5I1t_qngYpSKtCHoHLD9c/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2060,
+        -520
+      ],
+      "id": "1e693d5d-2d22-4baf-8312-aa505be652bf",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "F0B9y4BkDeHt8jHk",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f1d39aa-58fe-4f56-b60c-06d62a7fe931",
+              "name": "Summary",
+              "value": "={{ $json.candidates[0].content.parts[0].text.match(/\\*\\*Summary:\\*\\*([\\s\\S]*?)\\n\\n/)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "d64ef98b-eeef-4890-b2c0-f4e4d4273ef7",
+              "name": "Suggested Action",
+              "value": "={{ $json.candidates[0].content.parts[0].text.match(/\\*\\*Immediate Action:\\*\\*([\\s\\S]*?)\\n/)?.[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "e9fdcbf2-3e2a-4744-b98e-0ea659bb8654",
+              "name": "FollowUp",
+              "value": "={{ $json.candidates[0].content.parts[0].text.match(/\\*\\*Follow-Up Action:\\*\\*([\\s\\S]*?)\\n/)?.[1].trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1140,
+        -520
+      ],
+      "id": "06c4abf7-2c74-42bd-8ca5-f9f87b61dc5e",
+      "name": "Summary"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw",
+          "mode": "list",
+          "cachedResultName": "trial",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "S.No",
+              "displayName": "S.No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Feedback",
+              "displayName": "Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "candidates",
+              "displayName": "candidates",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "usageMetadata",
+              "displayName": "usageMetadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "modelVersion",
+              "displayName": "modelVersion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "responseId",
+              "displayName": "responseId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SUMMARY",
+              "displayName": "SUMMARY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Suggested Action",
+              "displayName": "Suggested Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Follow Up",
+              "displayName": "Follow Up",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ResponsibleDepartment ",
+              "displayName": "ResponsibleDepartment ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FollowUp",
+              "displayName": "FollowUp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -840,
+        -520
+      ],
+      "id": "996459db-2f80-445d-8e5c-1dadca1aedc2",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lRFVqL0Dee7JTA1B",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Agent helping a college placement officer summarize survey feedback for internal reports.\n\n**Task:**\nTake the following data — Summary, Suggested Action, Follow-up, and Department — and rewrite it clearly and formally for an internal email.\n\n**Format the output as structured JSON with these fields**:\n- Summary\n- SuggestedAction\n- FollowUp\n- ResponsibleDepartment\n\n**Input:**\n\nSummary: {{ $json[\"Summary\"] }}\n\n\nFollow Up: {{ $json['Suggested Action'] }}\n\n\nReturn only clean JSON. Do not include explanations or extra words.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -680,
+        -280
+      ],
+      "id": "e7d3c2a1-cfa6-4819-956e-ed4736927332",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        -60
+      ],
+      "id": "4a058893-60cc-418e-9f55-623ac4d42316",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ExCXqpO4bzqYAwsB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summary": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "46e48a1f-4d2a-4cc3-ad54-de0fedb10c80",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54dfab368bd4ea036099c04150a4000f2df8edb78dec1122c8a5da28bad0ed4c"
+  },
+  "id": "eGUNa5FWzw8V12cu",
+  "tags": []
+}
