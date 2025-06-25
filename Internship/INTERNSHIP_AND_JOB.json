@@ -1,0 +1,879 @@
+{
+  "name": "INTERNSHIP AND JOB",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1320,
+        -40
+      ],
+      "id": "2fee7acd-2061-4027-a761-626f5cce862d",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://talentbattle.in/talent-battle-jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -840,
+        -520
+      ],
+      "id": "0b8771fe-2865-4416-a1cd-96025c9d4f24",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://in.prosple.com/search-jobs?locations=9826&defaults_applied=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        -320
+      ],
+      "id": "1c064afb-e079-426e-8769-3830d70b511b",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "url": "https://fresherscamp.com/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1020,
+        240
+      ],
+      "id": "9a129ac4-771b-427a-a9b8-f4d4e403e54b",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "url": "https://freshershunt.in/internship/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -980,
+        400
+      ],
+      "id": "b5a0e104-e1d8-4921-b25d-21ee3c330fd0",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "url": "https://www.jobinsider.in/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -940,
+        600
+      ],
+      "id": "d3f8255e-eecf-49e4-a3f3-5e3a12176ff2",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "url": "https://t.me/s/placementprodigy",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -940,
+        780
+      ],
+      "id": "eecb6713-4f36-4f2a-a9ca-2880e716f278",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "url": "https://r.jina.ai/https://www.jobsgovind.com",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        -260
+      ],
+      "id": "e546780b-b1b4-4409-9893-c5267509a634",
+      "name": "Fetch Data form website",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "VHNSqsB5eBTzPEN5",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "gAWYuExbclEPRo50",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.data }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "company name",
+              "description": "name of the hiring company",
+              "required": true
+            },
+            {
+              "name": "role ",
+              "description": "role of the hiring job",
+              "required": true
+            },
+            {
+              "name": "Location",
+              "description": "place of the office or if mention work from home ",
+              "required": true
+            },
+            {
+              "name": "Last Date to Apply",
+              "type": "date",
+              "description": "Last date for the application",
+              "required": true
+            },
+            {
+              "name": "Type of Company (IT/ ITES/ Core/Marketing/ Management)",
+              "description": "Type of Company (IT/ ITES/ Core/Marketing/ Management) based on this category and send me ",
+              "required": true
+            },
+            {
+              "name": "Batch",
+              "type": "number",
+              "description": "For which batch year student ",
+              "required": true
+            },
+            {
+              "name": "Qualification/ Experience",
+              "description": "List the department or which domain ",
+              "required": true
+            },
+            {
+              "name": "Required Skills",
+              "description": "Knowledge and skills required for the role",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        -360
+      ],
+      "id": "16c3c455-2adf-4dec-9d9a-3d159d63ca39",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        260,
+        740
+      ],
+      "id": "a7b64fc5-1fee-44af-b50e-8118e089df35",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ExCXqpO4bzqYAwsB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}\n\nthe above is the data i want to just categories and map according to my fields based on the data the output you follow the output parser",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant so stricly follow the outcome you should provide and try accordingly\n\noutput should be :\n{\n  \"Company Name\": \"\",\n  \"Category\": \"\",\n  \"Location\": \"\",\n  \"Last Date to Apply\": \"\",\n  \"Start Date\": \"\",\n  \"Duration\": \"\",\n  \"Type of Company (IT/ ITES/ Core/Marketing/ Management)\": \"\",\n  \"Batch\": \"\",\n  \"Qualification/ Experience\": \"\",\n  \"Required Skills\": \"\",\n  \"Apply Link\": \"\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        -140
+      ],
+      "id": "cd03ae83-009e-4c42-a2ac-39aab4ed383a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        80
+      ],
+      "id": "fce3c87e-dbc9-4f5b-8120-a55edcf90950",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ExCXqpO4bzqYAwsB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Company Name\": \"\",\n  \"Category\": \"\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        60
+      ],
+      "id": "248f0661-fc29-4eff-aa5a-3f842f3b1ccb",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "url": "https://r.jina.ai/https://fresherscamp.com/category/jobs/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -140,
+        440
+      ],
+      "id": "9500c3db-5b8d-4520-a6f9-7702792aeedf",
+      "name": "Fetch Data form website1",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "VHNSqsB5eBTzPEN5",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "gAWYuExbclEPRo50",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.data }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "link 1",
+              "description": "extract job link 1",
+              "required": true
+            },
+            {
+              "name": "link 2",
+              "description": "extract job  link 2",
+              "required": true
+            },
+            {
+              "name": "link 3",
+              "description": "extract job link 3",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value.\n\noutput should be atmost 3 jobs deatils"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        440
+      ],
+      "id": "da0e9147-9652-4844-ac8d-00b094bc298e",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.output['link 1'] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        460
+      ],
+      "id": "1823f181-07df-4c49-8690-4afbd240f4e0",
+      "name": "Fetch Data form website2",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "VHNSqsB5eBTzPEN5",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "gAWYuExbclEPRo50",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.data }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "company name",
+              "description": "name of the hiring company",
+              "required": true
+            },
+            {
+              "name": "role ",
+              "description": "role of the hiring job",
+              "required": true
+            },
+            {
+              "name": "Location",
+              "description": "place of the office or if mention work from home ",
+              "required": true
+            },
+            {
+              "name": "Last Date to Apply",
+              "description": "Last date for the application",
+              "required": true
+            },
+            {
+              "name": "Type of Company (IT/ ITES/ Core/Marketing/ Management)",
+              "description": "Type of Company (IT/ ITES/ Core/Marketing/ Management) based on this category and send me ",
+              "required": true
+            },
+            {
+              "name": "Batch",
+              "type": "number",
+              "description": "For which batch year student ",
+              "required": true
+            },
+            {
+              "name": "Qualification/ Experience",
+              "description": "List the department or which domain ",
+              "required": true
+            },
+            {
+              "name": "Required Skills",
+              "description": "Knowledge and skills required for the role",
+              "required": true
+            },
+            {
+              "name": "apply link",
+              "description": "application link"
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        460
+      ],
+      "id": "57457393-e1b5-4af2-8f40-ac1cfe2aad06",
+      "name": "Information Extractor2"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        700
+      ],
+      "id": "8c93943a-41e3-4698-98f2-e1b0d52693c3",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ExCXqpO4bzqYAwsB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -140
+      ],
+      "id": "333d0149-6688-4263-9679-12fc4fcb319c",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ExCXqpO4bzqYAwsB",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.output['link 2'] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        620
+      ],
+      "id": "5ef8b9eb-dc9c-4329-986c-ca2098b271d2",
+      "name": "Fetch Data form website3",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "VHNSqsB5eBTzPEN5",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "gAWYuExbclEPRo50",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.output['link 3'] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        760
+      ],
+      "id": "d4529f58-3832-4f9e-bb3d-be20cc40d846",
+      "name": "Fetch Data form website4",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "VHNSqsB5eBTzPEN5",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "gAWYuExbclEPRo50",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw",
+          "mode": "list",
+          "cachedResultName": "trial",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 342345114,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_7SM_356B-Y_lXORPMVLNBZxISFeUGk3C2W49W9kOaw/edit#gid=342345114"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company Name": "={{ $json.output['company name'] }}",
+            "Role": "={{ $json.output['role '] }}",
+            "Location": "={{ $json.output.Location }}",
+            "Last Date to Apply": "={{ $json.output['Last Date to Apply'] }}",
+            "Batch": "={{ $json.output.Batch }}",
+            "Type of Company (IT/ ITES/ Core/Marketing/ Management)": "={{ $json.output['Type of Company (IT/ ITES/ Core/Marketing/ Management)'] }}",
+            "Qualification/ Experience": "={{ $json.output['Qualification/ Experience'] }}",
+            "Required Skills": "={{ $json.output['Required Skills'] }}",
+            "Apply Link": "={{ $json.output['apply link'] }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Last Date to Apply",
+              "displayName": "Last Date to Apply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type of Company (IT/ ITES/ Core/Marketing/ Management)",
+              "displayName": "Type of Company (IT/ ITES/ Core/Marketing/ Management)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Batch",
+              "displayName": "Batch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Qualification/ Experience",
+              "displayName": "Qualification/ Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Required Skills",
+              "displayName": "Required Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Apply Link",
+              "displayName": "Apply Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1540,
+        480
+      ],
+      "id": "bc0e80e2-7e36-4e6e-bb04-00f6d099e27f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lRFVqL0Dee7JTA1B",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Data form website",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Data form website1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        []
+      ]
+    },
+    "Fetch Data form website": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data form website1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "Fetch Data form website2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Data form website3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Data form website4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data form website2": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data form website3": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data form website4": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor2": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "02d8f99b-00f9-4604-b829-0eeb76448928",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54dfab368bd4ea036099c04150a4000f2df8edb78dec1122c8a5da28bad0ed4c"
+  },
+  "id": "xqtS10uJGbtApZjB",
+  "tags": []
+}
